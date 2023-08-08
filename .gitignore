@@ -2,11 +2,7 @@
 
 ## Back-end
 
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+server/node_modules/
 
 ### STS ###
 .apt_generated
