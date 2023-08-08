@@ -1,0 +1,59 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+## Back-end
+
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+
+### VS Code ###
+.vscode/
+
+
+## Front-end related 
+
+# dependencies
+journalise/node_modules
+journalise/.pnp
+journalise/.pnp.js
+
+# testing
+journalise/coverage
+
+# next.js
+journalise/.next/
+journalise/out/
+
+# production
+journalise/build
+
+# misc
+journalise/.DS_Store
+journalise/*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
