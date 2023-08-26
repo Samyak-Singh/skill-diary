@@ -1,30 +1,32 @@
-import { ObjectId } from "mongodb";
 
 import mongoose from "mongoose";
 
-const usersSchema = mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, "Please Valid Username"],
+const userSchema = mongoose.Schema(
+    {
+        firstName: {
+            type: String,
+            required: true,
+        },
+        lastName: {
+            type: String,
+            required: true,
+        },
+        username: {
+            type: String,
+            required: false,
+        },
+        email: {
+            type: String,
+            required: true,
+        },
+        passwordHash: {
+            type: String,
+            required: true,
+        }
     },
-    username: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    diaries: {
-      type: [ObjectId],
-      required: false,
-      default: [],
-    },
-  },
-  {
-    timestamps: true,
-  }
+    {
+        timestamps: true,
+    }
 );
-const User = mongoose.model("User", usersSchema);
+const User = mongoose.model("User", userSchema);
 export default User;
