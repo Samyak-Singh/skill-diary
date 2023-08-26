@@ -12,12 +12,8 @@ const diaryRecordRelationSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
-    recordIdList: [{ recordId: { type: ObjectId } }],
-    recordDate: {
-      //TODO: This record date is duplicate of the above month.
-      type: Date,
-      required: true,
-    },
+    recordIdList: [{ recordId: { type: ObjectId } }]
+    //TODO: We have the scope to add the time in the list as well. 
   },
   {
     timestamps: true,

@@ -1,8 +1,10 @@
 import express from "express";
+import moment from "moment"; 
 //import db from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
 import User from "../models/users.mjs";
 import Diary from "../models/diaries.mjs";
+import DiaryRecordRelation from "../models/diaryRecordRelation.mjs";
 
 const router = express.Router();
 
@@ -38,13 +40,24 @@ router.get("/users/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const body = req.body;
+    console.log("Body receive while posting is ", body);
     const diary = await Diary.create(body);
     const user = await User.findById(body.userId);
     console.log(body.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
+    console.log(diary);
+    const currentDate = new Date(); 
+    currentDate.setDate(1);
+    const relation = {
+      diaryId: diary,
+      monthYear: currentDate,
+      recordIdList: []
+    };
+    
+    const diaryRelation = await DiaryRecordRelation.create(relation);
+    console.log(diaryRelation);
     user.diaries.push(diary.ObjectId);
     await user.save();
 
