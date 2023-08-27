@@ -1,11 +1,16 @@
 import Image from "next/image";
 import React from "next";
 import Link from "next/link";
-import { Button } from "@mui/material";
+import { Button, ButtonGroup } from "@mui/material";
+import { useSession } from "next-auth/react";
+import { loginUrl, registerUserUrl, signupUrl } from "@/lib/constants";
 
 export default function Header() {
-    let isLoggedIn = false;
-    let username = "User"
+
+    const session = useSession();
+
+    let isLoggedIn = session.status === "authenticated";
+    let username = session.data?.user?.name || "";
     return (
         <div className="z-10 max-w-5xl w-full items-center justify-between font-sans-serif text-sm lg:flex">
             <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
@@ -16,9 +21,14 @@ export default function Header() {
                 isLoggedIn ? (
                     <span></span>
                 ) : (
-                    <Button size="large" variant="outlined" href="./login">
-                        Login
-                    </Button>
+                        <ButtonGroup>
+                            <Button size="large" variant="outlined" href={loginUrl}>
+                                Login
+                            </Button>
+                            <Button size="large" variant="outlined" href={signupUrl}>
+                                Sign Up
+                            </Button>
+                        </ButtonGroup>
                 )
             }
 

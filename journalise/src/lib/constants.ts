@@ -1,3 +1,14 @@
+export const BCRYPT_SALT_ROUNDS = 11
+export const backendUrl = process.env.NODE_ENV === "development" ? 'http://localhost:2023/' : ""
+
+// UI routes
+export const homeUrl = '/'
+export const loginUrl = '/api/auth/signin/credentials'
+export const logoutUrl = '/api/auth/signout'
+export const signupUrl = '/register'
+
+export const registerUserUrl = 'api/v1/users/register/'
+
 export const greeting_texts: string[] = [
     "Hey there! How's your day treating you?",
     "Good day! How has your day been unfolding?",

@@ -8,18 +8,24 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   try {
     const userCredential = req.body;
-    console.log(userCredential);
-    const userCredentialInfo = await User.create(userCredential);
-    console.log(userCredentialInfo);
+    const isUserPresent = await User.findOne({ email: userCredential.email });
+    if (isUserPresent) {
+      res
+        .status(409)
+        .json({ state: true, message: "User already registered with this email id" });
+    } else {
 
-    const userDiaryRelation = {
-      userId: userCredentialInfo._id,
-      diaries: [],
+      const userCredentialInfo = await User.create(userCredential);
+      console.log("User created in users table: ", userCredentialInfo);
+
+      const userDiaryRelation = await UserDiaryRelation.create({
+        userId: userCredentialInfo._id,
+        diaries: [],
+      });
+      console.log("User Diary Relation created:", userDiaryRelation);
+
+      res.status(200).json({ message: "User Registration Success!" });
     }
-    const userDiaryRelationInfo = await UserDiaryRelation.create(userDiaryRelation);
-    console.log(userDiaryRelationInfo);
-
-    res.status(200).json({ message: "User Registration Success!" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

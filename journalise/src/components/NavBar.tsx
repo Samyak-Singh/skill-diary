@@ -16,11 +16,22 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Book, Notes, Pages } from '@mui/icons-material';
 import Link from 'next/link';
-
-const pages = [{ title: 'Create Today\'s Entry', url: "/user/newEntry" }, { title: 'Your Diary', url: "/user" }];
-const settings = [{ title: 'Profile', url: '/user/profile' }, { title: 'Logout', url: 'user/logout' }];
+import { useSession } from 'next-auth/react';
+import { getInitials, stringAvatar } from '@/lib/navbarUtils';
+import { blue, deepPurple } from '@mui/material/colors';
+import { loginUrl, logoutUrl } from '@/lib/constants';
 
 function NavBar(): React.JSX.Element {
+
+    const session = useSession();
+
+    const name = session.data?.user?.name || "";
+
+    const isLoggedIn = session.status === "authenticated";
+
+    const pages = [{ title: 'Your Diaries', url: isLoggedIn ? "/user" : loginUrl }];
+    const settings = [{ title: 'Profile', url: '/user/profile' }, { title: 'Logout', url: logoutUrl }];
+
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -132,9 +143,16 @@ function NavBar(): React.JSX.Element {
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
+                        <Tooltip title={isLoggedIn ? "Open settings" : "Login"}>
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Login" src="/broken-image.jpg" />
+                                {
+                                    isLoggedIn ?
+                                        <Avatar {...stringAvatar(name)} />
+                                        :
+                                        <Link href={loginUrl}>
+                                            <Avatar alt="Login" sx={{ bgcolor: blue }} />
+                                        </Link>
+                                }
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -150,7 +168,7 @@ function NavBar(): React.JSX.Element {
                                 vertical: 'top',
                                 horizontal: 'right',
                             }}
-                            open={Boolean(anchorElUser)}
+                            open={isLoggedIn && Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
                             {settings.map((setting, index) => (

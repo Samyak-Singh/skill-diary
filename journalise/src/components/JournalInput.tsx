@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { style } from "./journalInputStyles"
 import { Button, Input, InputAdornment } from '@mui/material';
-import { greeting_texts } from '@/constants/constants';
 import { generate_greeting_texts } from '@/lib/util';
 
 export default function JournalInput() {
@@ -32,12 +31,9 @@ export default function JournalInput() {
     return (
         <>
         <div className='flex-col'>
-                <p className='font-sans italic '>
-                    {entryDate}
-            </p>
+                <p className='font-sans italic '>{entryDate}</p>
 
-            <Input
-                    startAdornment={<InputAdornment position='start' className='font-sans italic'>{entryTime}</InputAdornment>}
+                <Input startAdornment={<InputAdornment position='start' className='font-sans italic'>{entryTime}</InputAdornment>}
                 multiline
                 className={'mt-2'}
                 style={style}
