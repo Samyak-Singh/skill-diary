@@ -40,11 +40,14 @@ export const authOptions = {
         })
     ],
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, account, user }) {
             // Persist the OAuth access_token and or the user id to the token right after signin
-
             console.log("Inside JWT : token", token);
+            console.log("Inside JWT : account", account);
             console.log("Inside JWT : user", user);
+            if (account) {
+                token.accessToken = account.access_token;
+            }
             if (user) {
                 token.accessToken = user.access_token;
                 token.id = user.id;

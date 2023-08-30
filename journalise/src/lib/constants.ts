@@ -8,6 +8,8 @@ export const logoutUrl = '/api/auth/signout'
 export const signupUrl = '/register'
 
 export const registerUserUrl = 'api/v1/users/register/'
+export const userSDiaryUrl = (userId: string) => `api/v1/diaries/users/${userId}/`
+export const createUserSDiaryUrl = "api/v1/diaries/"
 
 export const greeting_texts: string[] = [
     "Hey there! How's your day treating you?",

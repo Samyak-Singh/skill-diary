@@ -1,25 +1,24 @@
 "use client"
 
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { Book, Notes, Pages } from '@mui/icons-material';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { getInitials, stringAvatar } from '@/lib/navbarUtils';
-import { blue, deepPurple } from '@mui/material/colors';
 import { loginUrl, logoutUrl } from '@/lib/constants';
+import { stringAvatar } from '@/lib/navbarUtils';
+import { Book } from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import { blue } from '@mui/material/colors';
+import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
+import * as React from 'react';
 
 function NavBar(): React.JSX.Element {
 
@@ -173,7 +172,7 @@ function NavBar(): React.JSX.Element {
                         >
                             {settings.map((setting, index) => (
                                 <MenuItem key={index} onClick={handleCloseUserMenu}>
-                                    <Link href={setting.url}>{setting.title}</Link>
+                                    <Link href={setting.url} onClick={e => { e.preventDefault(); signOut(); }}>{setting.title}</Link>
                                 </MenuItem>
                             ))}
                         </Menu>

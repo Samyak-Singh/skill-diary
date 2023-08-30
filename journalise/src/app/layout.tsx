@@ -9,6 +9,8 @@ import '@fontsource/roboto/700.css';
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { SessionProvider } from 'next-auth/react';
+import Copyright from '@/components/Copyright';
+import { createTheme } from '@mui/material';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,6 +27,12 @@ export const meta: Metadata = {
   manifest: "/site.webmanifest",
 }
 
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 export default function RootLayout({
   children,
 }: {
@@ -38,6 +46,7 @@ export default function RootLayout({
           {
             children
           }
+          <Copyright theme={theme} sx={{ mt: 5 }} />
         </body>
       </SessionProvider>
     </html>
