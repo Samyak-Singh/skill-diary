@@ -8,6 +8,10 @@ const diariesSchema = mongoose.Schema(
       type: String,
       required: [true],
     },
+    description: {
+      type: String,
+      required: [false],
+    },
     tags: [
       {
         ObjectId: { type: ObjectId },

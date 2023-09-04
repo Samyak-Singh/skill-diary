@@ -1,11 +1,16 @@
+import * as React from 'react';
 import { getDiaries, getDiariesMock } from '@/lib/util';
 import { Book, BookOutlined, PlusOne } from '@mui/icons-material';
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
+import { Button, Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import CreateNewDiaryModal from './CreateNewDiaryModal';
 
 export default function ListDiaries(props: any) {
 
     const router = useRouter();
+    const [modalOpen, setModalOpen] = React.useState(false);
+    const handleOpen = () => setModalOpen(true);
+    const handleClose = () => setModalOpen(false);
 
     const { selectedDate, userId } = props;
 
@@ -13,9 +18,7 @@ export default function ListDiaries(props: any) {
     const diaries = getDiariesMock(userId);
     // const diaries = getDiaries(userId);
 
-    const handleDiaryClick = (e) => {
-        e.preventDefault();
-        const diaryId = e.target.id;
+    const handleDiaryClick = (diaryId: any) => {
         console.log("diary id: ", diaryId)
         // get dairy id from event and fetch list of entries for that diary corrensponding to the selected date and user
         // and redirect to the page with the list of entries using router
@@ -40,10 +43,10 @@ export default function ListDiaries(props: any) {
                         return (
                             <div key={diary.id}>
                                 <Card sx={{ height: 140, width: 140, padding: 1, margin: 2 }}>
-                                    <CardActionArea id={diary.id} onClick={handleDiaryClick} >
-                                        <CardMedia component={"i"} ><BookOutlined /></CardMedia>
+                                    <CardActionArea id={diary.id} onClick={() => handleDiaryClick(diary.id)} >
+                                        <CardMedia component={"i"} title={diary.title}><BookOutlined /></CardMedia>
                                         <CardContent>
-                                            <Typography gutterBottom variant="h5">
+                                            <Typography gutterBottom variant="h5" component={'div'}>
                                                 {diary.title}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
@@ -57,14 +60,11 @@ export default function ListDiaries(props: any) {
                     })
                 }
                 <Card sx={{ height: 140, width: 140, padding: 1, margin: 2 }}>
-                    <CardActionArea >
                         <CardMedia component={"i"} ><BookOutlined /><PlusOne /></CardMedia>
                         <CardContent>
-                            <Typography gutterBottom variant="h5">
-                                Create new Diary
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
+                        <CreateNewDiaryModal open={modalOpen} handleClose={handleClose} />
+                        <Button variant='text' size='small' onClick={handleOpen}>Create New Diary</Button>
+                    </CardContent>
                 </Card>
             </div>
         </>

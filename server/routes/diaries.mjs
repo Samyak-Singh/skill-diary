@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import User from "../models/users.mjs";
 import Diary from "../models/diaries.mjs";
 import DiaryRecordRelation from "../models/diaryRecordRelation.mjs";
+import UserDiaryRelation from "../models/userDiaryRelation.mjs";
 
 const router = express.Router();
 
@@ -34,6 +35,31 @@ router.get("/users/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+});
+
+router.post("/users/:id", async (req, res) => {
+  const { userId, diaryName, diaryDesc } = req.body;
+  console.log("Body receive while posting is ", req.body);
+  try {
+    const diary = await Diary.create({
+      name: diaryName,
+      description: diaryDesc,
+    });
+    let userDiaryRelation = await UserDiaryRelation.findById(userId);
+    if (!userDiaryRelation) {
+      userDiaryRelation = await UserDiaryRelation.create({
+        userId: userId,
+        diaries: [diary],
+      });
+    }
+    userDiaryRelation.diaries.push(diary);
+    await userDiaryRelation.save();
+    res.status(200).json({ message: "Diary Successfully Created" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
+  }
+
 });
 
 router.post("/", async (req, res) => {
