@@ -13,6 +13,7 @@ export default function Calender(props: { selectedDate: any; setSelectedDate: an
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateCalendar
                     renderLoading={() => <DayCalendarSkeleton />}
+                    defaultValue={null}
                     value={selectedDate}
                     onChange={(newValue) => setSelectedDate(newValue)}
                     views={['year', 'month', 'day']}

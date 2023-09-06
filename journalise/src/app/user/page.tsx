@@ -6,6 +6,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import Calender from '../../components/Calender';
 import ListDiaries from '@/components/ListDiaries';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const theme = createTheme({
     palette: {
@@ -15,6 +17,7 @@ const theme = createTheme({
 
 export default function UserHomepage() {
 
+    const router = useRouter();
     const session = useSession();
     const userId = session.data?.user?.id;
 
@@ -24,6 +27,8 @@ export default function UserHomepage() {
     useEffect(() => {
         console.log("selected date: ", selectedDate?.toString());
         console.log("selected diary: ", selectedDiary);
+        if (selectedDate && selectedDiary) {
+        }
     }, [selectedDate, selectedDiary])
 
     return (
@@ -42,7 +47,19 @@ export default function UserHomepage() {
                         <div className=''>
                             <Calender selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                         </div>
-
+                    </div>
+                    <div className='flex flex-row-reverse mr-[12rem]'>
+                        <Link href={{ pathname: "./newEntry", query: { diary: selectedDiary, date: selectedDate?.toString() } }}>
+                            <span className='flex justify-center mt-5'>
+                                <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
+                                    {
+                                        dayjs().isSame(selectedDate, 'day') ?
+                                            "Create New Entry" :
+                                            "View Entries"
+                                    }
+                                </button>
+                            </span>
+                        </Link>
                     </div>
                 </Container>
             </ThemeProvider>

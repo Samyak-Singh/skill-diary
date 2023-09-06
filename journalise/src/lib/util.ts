@@ -29,26 +29,28 @@ export const getCreateDiaryURL = (userId: string): string => {
     return `${backendUrl}${createUserSDiaryUrl(userId)}`;
 }
 
-export const getDiaries = (userId: string) => {
-    const diaries = fetch(getUserSDiaryURL(userId), {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    }).then(response => {
-        if (response.ok) {
-            return response.json()
-        } else {
-            throw new Error(response.statusText)
-        }
-    }).then(data => {
-        console.log(data)
-        return data;
-    }).catch(error => {
-        console.log(error)
-    })
+export const getDiaries = async (userId: string) => {
+    try {
+        const response = await fetch(getUserSDiaryURL(userId), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
 
-    return diaries;
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error(`Error fetching diaries: ${errorData.message}`);
+            return [];
+        }
+
+        const diaries = await response.json();
+
+        return diaries;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
 }
 
 export const getDiariesMock = (userId: any): any => {

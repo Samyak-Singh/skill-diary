@@ -4,8 +4,12 @@ import * as React from 'react';
 import { style } from "./journalInputStyles"
 import { Button, Input, InputAdornment } from '@mui/material';
 import { generate_greeting_texts } from '@/lib/util';
+import { useSession } from 'next-auth/react';
 
 export default function JournalInput() {
+
+    const session = useSession();
+    const userId = session.data?.user?.id;
 
     const [entry, setEntry] = React.useState("")
     const [entryDate, entryTime] = (new Date().toLocaleString("en-GB", {
@@ -20,7 +24,7 @@ export default function JournalInput() {
 
     const handleClick = () => {
         const payload = {
-            'userId': "",
+            'userId': userId,
             'date': entryDate,
             'time': entryTime,
             'entry': entry

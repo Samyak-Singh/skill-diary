@@ -30,29 +30,49 @@ router.get("/:id", async (req, res) => {
 router.get("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
-    res.status(200).json(user.diaries);
+    console.log("Fetch diaries, User id is ", id);
+    const userDiaryRelation = await UserDiaryRelation.findOne({ userId: id });
+    if (!userDiaryRelation || !userDiaryRelation.diaries) {
+      return res.status(404).json({ message: "User has no diaries" });
+    }
+    const diaryIds = userDiaryRelation.diaries;
+    const diaryPromises = diaryIds.map(async (diaryId) => {
+      const diary = await Diary.findById(diaryId);
+      console.log("Diary is ", diary);
+      return diary;
+    });
+
+    const diaries = await Promise.all(diaryPromises);
+
+
+    console.log("Diaries of user are ", diaries);
+    res.status(200).json(diaries);
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({ message: error.message });
   }
 });
 
 router.post("/users/:id", async (req, res) => {
-  const { userId, diaryName, diaryDesc } = req.body;
+  const userId = req.params.id;
+  console.log("User id is ", userId);
+  const { diaryName, diaryDesc } = req.body;
   console.log("Body receive while posting is ", req.body);
   try {
     const diary = await Diary.create({
       name: diaryName,
       description: diaryDesc,
     });
-    let userDiaryRelation = await UserDiaryRelation.findById(userId);
+    let userDiaryRelation = await UserDiaryRelation.findOne({ userId: userId });
     if (!userDiaryRelation) {
+      console.log("User Diary Relation not found. Creating new one");
       userDiaryRelation = await UserDiaryRelation.create({
         userId: userId,
-        diaries: [diary],
+        diaries: [],
       });
     }
     userDiaryRelation.diaries.push(diary);
+    console.log("User Diary Relation is ", userDiaryRelation);
     await userDiaryRelation.save();
     res.status(200).json({ message: "Diary Successfully Created" });
   } catch (error) {

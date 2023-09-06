@@ -9,7 +9,7 @@ export const signupUrl = '/register'
 
 export const registerUserUrl = 'api/v1/users/register/'
 export const userSDiaryUrl = (userId: string) => `api/v1/diaries/users/${userId}/`
-export const createUserSDiaryUrl = (userId: string) => `api/v1/diaries//users/${userId}/`
+export const createUserSDiaryUrl = (userId: string) => `api/v1/diaries/users/${userId}/`
 
 export const greeting_texts: string[] = [
     "Hey there! How's your day treating you?",

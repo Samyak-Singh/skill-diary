@@ -39,10 +39,12 @@ const CreateNewDiaryModal: React.FC<Props> = ({ open, handleClose }) => {
             fetch(getCreateDiaryURL(userId), {
                 method: 'POST',
                 body: JSON.stringify({
-                    userId: userId,
                     diaryName: data.get("diaryName"),
                     diaryDesc: data.get("diaryDesc")
                 }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             }).then(res => res.json())
                 .then(data => {
                     console.log(data);
