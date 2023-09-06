@@ -6,16 +6,15 @@ import { Button, Input, InputAdornment } from '@mui/material';
 import { generate_greeting_texts } from '@/lib/util';
 import { useSession } from 'next-auth/react';
 
-export default function JournalInput() {
-
-    const session = useSession();
-    const userId = session.data?.user?.id;
+export default function JournalInput(props: any) {
 
     const [entry, setEntry] = React.useState("")
     const [entryDate, entryTime] = (new Date().toLocaleString("en-GB", {
         year: "numeric", month: "short", day: "numeric",
         hour: "2-digit", minute: "numeric", hour12: true
     })).split(', ')
+
+    const { userId } = props; 
 
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

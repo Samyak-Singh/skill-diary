@@ -55,7 +55,7 @@ export default function UserHomepage() {
                                     {
                                         dayjs().isSame(selectedDate, 'day') ?
                                             "Create New Entry" :
-                                            "View Entries"
+                                            "View Entry"
                                     }
                                 </button>
                             </span>
