@@ -1,10 +1,10 @@
 import clientPromise from '@/lib/mongodb';
-import { MongoDBAdapter } from '@auth/mongodb-adapter';
+import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import type { NextAuthOptions } from "next-auth";
 import { comparePassword } from '@/lib/util';
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
     adapter: MongoDBAdapter(clientPromise),
     secret: process.env.NEXTAUTH_SECRET,
     session: {
@@ -24,7 +24,7 @@ export const authOptions = {
                 const adapter = authOptions.adapter;
                 console.log("Inside Authorize : credentials", credentials);
 
-                let user: any = await adapter.getUserByEmail(credentials.email);
+                let user: any = adapter?.getUserByEmail && await adapter.getUserByEmail(credentials.email);
                 console.log("Inside Authorize : user", user);
 
                 console.log("adapter: ", adapter)

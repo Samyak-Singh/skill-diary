@@ -1,9 +1,39 @@
 import bcryptjs from 'bcryptjs';
-import { createUserSDiaryUrl, greeting_texts, userSDiaryUrl } from "@/lib/constants";
+import { createRecordUrl, createUserSDiaryUrl, greeting_texts, userSDiaryUrl } from "@/lib/constants";
 import { BCRYPT_SALT_ROUNDS, backendUrl, registerUserUrl } from './constants';
 
 export const generate_greeting_texts = (): string => greeting_texts[Math.floor(Math.random() * greeting_texts.length)]
 
+export const getInitialContent = (greeting_text: string): any => {
+    return [
+        {
+            "type": "paragraph",
+            "props": {
+                "textColor": "default",
+                "backgroundColor": "default",
+                "textAlignment": "left"
+            },
+            "content": [
+                {
+                    "type": "text",
+                    "text": greeting_text,
+                    "styles": {}
+                }
+            ],
+            "children": []
+        },
+        {
+            "type": "paragraph",
+            "props": {
+                "textColor": "default",
+                "backgroundColor": "default",
+                "textAlignment": "left"
+            },
+            "content": [],
+            "children": []
+        }
+    ]
+}
 
 export const hashPassword = async (password: FormDataEntryValue | null): Promise<string> => {
     const salt = await bcryptjs.genSalt(BCRYPT_SALT_ROUNDS);
@@ -27,6 +57,10 @@ export const getUserSDiaryURL = (userId: string): string => {
 
 export const getCreateDiaryURL = (userId: string): string => {
     return `${backendUrl}${createUserSDiaryUrl(userId)}`;
+}
+
+export const getCreateRecordURL = (): string => {
+    return `${backendUrl}${createRecordUrl}`;
 }
 
 export const getDiaries = async (userId: string) => {

@@ -11,6 +11,9 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const diaries = await Diary.find({});
+    if (diaries.length === 0) {
+      return res.status(204).json({ message: "No diaries found" });
+    }
     res.status(200).json(diaries);
   } catch (error) {
     res.status(500).json({ message: error.message });

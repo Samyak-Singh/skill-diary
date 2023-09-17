@@ -8,6 +8,7 @@ import ListDiaries from '@/components/ListDiaries';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
 const theme = createTheme({
     palette: {
@@ -15,40 +16,47 @@ const theme = createTheme({
     },
 });
 
+const Editor = dynamic(() => import("../../components/Editor"), { ssr: false });
+
 export default function UserHomepage() {
 
     const router = useRouter();
     const session = useSession();
     const userId = session.data?.user?.id;
 
-    const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(dayjs(new Date()));
+    const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(null);
     const [selectedDiary, setSelectedDiary] = React.useState<any>(null);
 
     useEffect(() => {
-        console.log("selected date: ", selectedDate?.toString());
+        console.log("selected date: ", selectedDate?.format());
         console.log("selected diary: ", selectedDiary);
         if (selectedDate && selectedDiary) {
         }
     }, [selectedDate, selectedDiary])
 
     return (
-        <div>
             <ThemeProvider theme={theme}>
-                <Container className='mt-20'>
+            <Container className='mt-[4.2rem] mb-0  px-1 mx-auto' maxWidth={'xl'}>
 
                     {/* <Typography variant='h4' align='center'>
                         Dashboard
                     </Typography> */}
 
                     <div className='grid grid-cols-2 gap-4'>
-                        <div className=''>
-                            <ListDiaries selectedDate={selectedDate} setSelectedDiary={setSelectedDiary} userId={userId} />
-                        </div>
-                        <div className=''>
+                    <div className="grid grid-cols-2 gap-0 overflow-hidden">
+                        <div className=' w-max h-fit'>
                             <Calender selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                         </div>
+                        <div className='overflow-y-auto'>
+                            <ListDiaries selectedDate={selectedDate} selectedDiary={selectedDiary} setSelectedDiary={setSelectedDiary} userId={userId} />
+                        </div>
                     </div>
-                    <div className='flex flex-row-reverse mr-[12rem]'>
+                    <div className=" p-4 overflow-hidden">
+                        <Editor selectedDate={selectedDate} selectedDiary={selectedDiary} />
+                    </div>
+                </div>
+
+                {/* <div className='flex flex-row-reverse mr-[12rem]'>
                         <Link href={{ pathname: "./newEntry", query: { diary: selectedDiary, date: selectedDate?.toString() } }}>
                             <span className='flex justify-center mt-5'>
                                 <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
@@ -60,9 +68,8 @@ export default function UserHomepage() {
                                 </button>
                             </span>
                         </Link>
-                    </div>
+                    </div> */}
                 </Container>
-            </ThemeProvider>
-        </div>
+        </ThemeProvider>
     )
 }

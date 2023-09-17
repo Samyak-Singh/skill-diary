@@ -1,8 +1,10 @@
+"use client"
+
 import JournalInput from '@/components/JournalInput'
 import dayjs from 'dayjs';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import React from 'react'
+import React, { useState } from 'react'
 
 export default function NewEntry() {
 
@@ -13,9 +15,11 @@ export default function NewEntry() {
     const queryParams = useSearchParams()
     const diaryId = queryParams.get('diary')
     const selectedDate = queryParams.get('date')
+    const [entry, setEntry] = useState("")
 
     if (!dayjs().isSame(selectedDate, 'day')) {
         // fetch entries for selected date and diary
+
 
     }
 

@@ -64,7 +64,7 @@ const CreateNewDiaryModal: React.FC<Props> = ({ open, handleClose }) => {
                 slots={{ backdrop: Backdrop }}
                 slotProps={{
                     backdrop: {
-                        timeout: 500,
+                        timeout: 750,
                     },
                 }}
             >

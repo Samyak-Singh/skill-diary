@@ -28,27 +28,32 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const body = req.body;
-    const record = await Record.create(body);
+
+    const body = req.body
+    const entry = body.entry;
+
+    const record = await Record.create({
+      text: entry,
+      metadata: ""
+    });
 
     const query = {
-      diaryId: req.body.diaryId,
-      monthYear: req.body.date,
+      diaryId: body.diaryId,
+      monthYear: new Date(body.date),
     };
 
-    const diary = await DiaryRecordRelation.find(query);
-    console.log(diary);
-    if (!diary) {
-      return res.status(404).json({
-        message: "Not Respective Diary found for this user  not found",
+    let diaryRecordRelation = await DiaryRecordRelation.findOne(query);
+
+    if (!diaryRecordRelation) {
+      diaryRecordRelation = await DiaryRecordRelation.create({
+        diaryId: body.diaryId,
+        monthYear: new Date(body.date),
+        recordIdList: [],
       });
     }
-    if (!diary.recordIdList) {
-      diary.recordIdList = []; // Initialize the array if it's not already
-    }
 
-    diary.recordIdList.push(record.id);
-    await DiaryRecordRelation.save();
+    diaryRecordRelation.recordIdList.push(record.id);
+    await diaryRecordRelation.save();
 
     res
       .status(200)

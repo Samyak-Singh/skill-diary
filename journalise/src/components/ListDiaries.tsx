@@ -1,8 +1,10 @@
-import * as React from 'react';
-import { getDiaries, getDiariesMock } from '@/lib/util';
-import { Book, BookOutlined, PlusOne } from '@mui/icons-material';
-import { Button, Card, CardActionArea, CardContent, CardMedia, Skeleton, Typography } from '@mui/material';
+import { getDiaries } from '@/lib/util';
+import { Book, BookOutlined } from '@mui/icons-material';
+import { Card, CardMedia, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Tooltip, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import { useRouter } from 'next/navigation';
+import * as React from 'react';
 import CreateNewDiaryModal from './CreateNewDiaryModal';
 
 export default function ListDiaries(props: any) {
@@ -63,8 +65,59 @@ export default function ListDiaries(props: any) {
             <Typography variant='h4' align='center'>
                 Diaries <Book />
             </Typography>
-            <div className='flex flex-wrap justify-evenly align-baseline'>
+            <div className=''>
                 {
+                    skeleton && (
+                        <Card sx={{ height: 72, padding: "8px  16px" }}>
+                            <Skeleton component={'div'} variant="rectangular" height={15} />
+                            <Skeleton component={'div'} variant="rectangular" height={10} />
+                        </Card>
+                    )
+                }
+                {
+                    diaries.map((diary: any) => {
+                        return (
+                            <div key={diary.id}>
+                                <List>
+                                    <ListItemButton
+                                        selected={diary.id === props.selectedDiary}
+                                        onClick={() => handleDiaryClick(diary.id)}>
+                                        <ListItem
+                                            secondaryAction={
+                                                <IconButton edge="end" aria-label="delete">
+                                                    <Tooltip title="Not yet implemented">
+                                                        <DeleteIcon />
+                                                    </Tooltip>
+                                                </IconButton>
+                                            }
+                                            disablePadding
+                                        >
+                                            <ListItemText
+                                                primary={diary.name}
+                                                secondary={diary.description}
+                                            />
+                                        </ListItem>
+                                    </ListItemButton>
+                                </List>
+                            </div>
+                        )
+                    })
+                }
+
+                <List>
+                    <ListItemButton onClick={handleOpen}>
+                        <ListItem>
+                            <ListItemIcon>
+                                <BookOutlined />
+                            </ListItemIcon>
+                            <ListItemText primary="Create New Diary" />
+                        </ListItem>
+                    </ListItemButton>
+                    <CreateNewDiaryModal open={modalOpen} handleClose={handleClose} />
+                </List>
+
+
+                {/* {
                     skeleton && (
                         <Card sx={{ height: 140, width: 140, padding: 1, margin: 2 }}>
                             <CardMedia component={"i"}><BookOutlined /></CardMedia>
@@ -98,13 +151,14 @@ export default function ListDiaries(props: any) {
                         )
                     })
                 }
-                <Card sx={{ height: 140, width: 140, padding: 1, margin: 2 }}>
+                */}
+                {/* <Card sx={{ height: 140, width: 140, padding: 1, margin: 2 }}>
                         <CardMedia component={"i"} ><BookOutlined /><PlusOne /></CardMedia>
                         <CardContent>
                         <CreateNewDiaryModal open={modalOpen} handleClose={handleClose} />
                         <Button variant='text' size='small' onClick={handleOpen}>Create New Diary</Button>
                     </CardContent>
-                </Card>
+                </Card>  */}
             </div>
         </>
     )
