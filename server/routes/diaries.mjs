@@ -1,10 +1,9 @@
 import express from "express";
 //import db from "../db/conn.mjs";
-import { ObjectId } from "mongodb";
-import User from "../models/users.mjs";
 import Diary from "../models/diaries.mjs";
 import DiaryRecordRelation from "../models/diaryRecordRelation.mjs";
 import UserDiaryRelation from "../models/userDiaryRelation.mjs";
+import Record from "../models/records.mjs";
 
 const router = express.Router();
 
@@ -33,7 +32,8 @@ router.get("/:id", async (req, res) => {
 router.get("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("Fetch diaries, User id is ", id);
+    console.log("------------------------------------------------");
+    console.log("Fetching diaries for User id ", id);
     const userDiaryRelation = await UserDiaryRelation.findOne({ userId: id });
     if (!userDiaryRelation || !userDiaryRelation.diaries) {
       return res.status(404).json({ message: "User has no diaries" });
@@ -41,15 +41,14 @@ router.get("/users/:id", async (req, res) => {
     const diaryIds = userDiaryRelation.diaries;
     const diaryPromises = diaryIds.map(async (diaryId) => {
       const diary = await Diary.findById(diaryId);
-      console.log("Diary is ", diary);
       return diary;
     });
 
     const diaries = await Promise.all(diaryPromises);
 
-
     console.log("Diaries of user are ", diaries);
     res.status(200).json(diaries);
+    console.log("------------------------------------------------");
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
@@ -57,10 +56,11 @@ router.get("/users/:id", async (req, res) => {
 });
 
 router.post("/users/:id", async (req, res) => {
+  console.log("------------------------------------------------");
   const userId = req.params.id;
-  console.log("User id is ", userId);
+  console.log("Creating a new diary ", req.body);
   const { diaryName, diaryDesc } = req.body;
-  console.log("Body receive while posting is ", req.body);
+  console.log("Creating new diary for userId: ", userId, "diary: ", req.body);
   try {
     const diary = await Diary.create({
       name: diaryName,
@@ -78,6 +78,7 @@ router.post("/users/:id", async (req, res) => {
     console.log("User Diary Relation is ", userDiaryRelation);
     await userDiaryRelation.save();
     res.status(200).json({ message: "Diary Successfully Created" });
+    console.log("------------------------------------------------");
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
@@ -85,33 +86,43 @@ router.post("/users/:id", async (req, res) => {
 
 });
 
-router.post("/", async (req, res) => {
+router.delete("/", async (req, res) => {
+  console.log("------------------------------------------------");
   try {
-    const body = req.body;
-    console.log("Body receive while posting is ", body);
-    const diary = await Diary.create(body);
-    const user = await User.findById(body.userId);
-    console.log(body.userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    console.log(diary);
-    const currentDate = new Date(); 
-    currentDate.setDate(1);
-    const relation = {
-      diaryId: diary,
-      monthYear: currentDate,
-      recordIdList: []
-    };
-    
-    const diaryRelation = await DiaryRecordRelation.create(relation);
-    console.log(diaryRelation);
-    user.diaries.push(diary.ObjectId);
-    await user.save();
+    const { diaryId, userId } = req.body;
+    console.log("Request body is ", req.body)
+    console.log("Deleting diary ", diaryId, " of user ", userId);
 
-    res.status(200).json({ message: "Diary Successfully Created" });
+    const diary = await Diary.findById(diaryId);
+    if (!diary) {
+      return res.status(404).json({ message: "Diary not found" });
+    }
+    console.log("Diary to be deleted ", diary);
+
+    const diaryRecordRelation = await DiaryRecordRelation.findOne({ diaryId: diaryId });
+
+    const recordsList = diaryRecordRelation.recordIdList;
+    console.log("Records list in the above diary is ", recordsList);
+    recordsList && recordsList.forEach(async ({ recordId, date }) => {
+      console.log("Deleting Record ", recordId);
+      await Record.findByIdAndDelete(recordId);
+    });
+
+
+    const user = await UserDiaryRelation.findOne({ userId: userId });
+    const diaryList = user.diaries;
+    console.log("Diary list of user is ", diaryList);
+    const index = diaryList.indexOf(diaryId);
+    diaryList.splice(index, 1);
+    user.diaries = diaryList;
+    console.log("updated diary list of user ", user.diaries);
+    await user.save();
+    await Diary.findByIdAndDelete(diaryId);
+    await DiaryRecordRelation.findOneAndDelete({ diaryId: diaryId });
+
+    res.status(200).json({ message: "Diary Successfully Deleted" });
+    console.log("------------------------------------------------");
   } catch (error) {
-    console.log(error.message);
     res.status(500).json({ message: error.message });
   }
 });

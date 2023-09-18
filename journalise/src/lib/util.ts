@@ -1,5 +1,5 @@
 import bcryptjs from 'bcryptjs';
-import { createRecordUrl, createUserSDiaryUrl, greeting_texts, userSDiaryUrl } from "@/lib/constants";
+import { createRecordUrl, createUserSDiaryUrl, deleteUserSDiaryUrl, greeting_texts, userSDiaryUrl } from "@/lib/constants";
 import { BCRYPT_SALT_ROUNDS, backendUrl, registerUserUrl } from './constants';
 
 export const generate_greeting_texts = (): string => greeting_texts[Math.floor(Math.random() * greeting_texts.length)]
@@ -61,6 +61,10 @@ export const getCreateDiaryURL = (userId: string): string => {
 
 export const getCreateRecordURL = (): string => {
     return `${backendUrl}${createRecordUrl}`;
+}
+
+export const getDeleteUserSDiaryURL = (): string => {
+    return `${backendUrl}${deleteUserSDiaryUrl}`;
 }
 
 export const getDiaries = async (userId: string) => {

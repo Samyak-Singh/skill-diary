@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
+import Record from "./records.mjs";
 
 const diaryRecordRelationSchema = mongoose.Schema(
   {
@@ -9,10 +10,19 @@ const diaryRecordRelationSchema = mongoose.Schema(
     },
     monthYear: {
       //TODO: Store this field of Date in Month Year Format.
-      type: Date,
+      type: Number,
       required: true,
     },
-    recordIdList: [{ recordId: { type: ObjectId } }]
+    recordIdList: [{
+      recordId: {
+        type: ObjectId,
+        ref: Record
+      },
+      date: {
+        type: Number,
+        required: true,
+      }
+    }]
     //TODO: We have the scope to add the time in the list as well. 
   },
   {

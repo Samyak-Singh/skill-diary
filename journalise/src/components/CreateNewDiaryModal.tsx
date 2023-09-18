@@ -35,7 +35,7 @@ const CreateNewDiaryModal: React.FC<Props> = ({ open, handleClose }) => {
         console.log("diary name: ", data.get("diaryName"))
         console.log("diary desc: ", data.get("diaryDesc"))
 
-        if (userId && data.get("diaryName") && data.get("diaryDesc")) {
+        if (userId && data.get("diaryName")) {
             fetch(getCreateDiaryURL(userId), {
                 method: 'POST',
                 body: JSON.stringify({

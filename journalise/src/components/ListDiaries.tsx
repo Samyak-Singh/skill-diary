@@ -1,4 +1,4 @@
-import { getDiaries } from '@/lib/util';
+import { getDeleteUserSDiaryURL, getDiaries } from '@/lib/util';
 import { Book, BookOutlined } from '@mui/icons-material';
 import { Card, CardMedia, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Tooltip, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,7 +18,10 @@ export default function ListDiaries(props: any) {
     const handleOpen = () => setModalOpen(true);
     const handleClose = () => {
         setModalOpen(false);
-        setDiaryCount(diaryCount + 1);
+        // sleep for 1.5 seconds to allow the diary to be created before fetching the list of diaries
+        setTimeout(() => {
+            setDiaryCount(diaryCount + 1);
+        }, 1500);
     }
 
     const { userId, setSelectedDiary } = props;
@@ -60,6 +63,25 @@ export default function ListDiaries(props: any) {
         //     )
     }
 
+    const handleDiaryDelete = (diaryId: any) => {
+        const response = fetch(getDeleteUserSDiaryURL(), {
+            method: 'DELETE',
+            body: JSON.stringify({ "diaryId": diaryId, "userId": userId }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setDiaryCount(diaryCount - 1);
+                setSelectedDiary(null);
+            }).
+            catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
     return (
         <>
             <Typography variant='h4' align='center'>
@@ -84,8 +106,8 @@ export default function ListDiaries(props: any) {
                                         onClick={() => handleDiaryClick(diary.id)}>
                                         <ListItem
                                             secondaryAction={
-                                                <IconButton edge="end" aria-label="delete">
-                                                    <Tooltip title="Not yet implemented">
+                                                <IconButton edge="end" aria-label="delete" onClick={() => handleDiaryDelete(diary.id)}>
+                                                    <Tooltip title="Delete Diary">
                                                         <DeleteIcon />
                                                     </Tooltip>
                                                 </IconButton>
