@@ -9,7 +9,18 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const records = await Record.find({});
+    const { diaryId, monthYear, date } = req.body;
+    const diaryRecordRelation = await DiaryRecordRelation.findOne({
+      diaryId: diaryId,
+      monthYear: monthYear,
+    })
+    console.log("diaryRecordRelation: ", diaryRecordRelation, " recordsList: ", diaryRecordRelation.recordIdList);
+    const recordIdList = diaryRecordRelation.recordIdList.filter((item) => {
+      return item.date === date
+    });
+    console.log("recordIdList: ", recordIdList);
+    const records = await Record.findById(recordIdList[0].recordId);
+    console.log(records);
     res.status(200).json(records);
   } catch (error) {
     res.status(500).json({ message: error.message });

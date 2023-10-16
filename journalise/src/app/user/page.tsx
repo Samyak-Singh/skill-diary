@@ -31,6 +31,7 @@ export default function UserHomepage() {
         console.log("selected date: ", selectedDate?.format());
         console.log("selected diary: ", selectedDiary);
         if (selectedDate && selectedDiary) {
+            // fetch records for the selected date and diary
         }
     }, [selectedDate, selectedDiary])
 
@@ -55,20 +56,6 @@ export default function UserHomepage() {
                         <Editor selectedDate={selectedDate} selectedDiary={selectedDiary} />
                     </div>
                 </div>
-
-                {/* <div className='flex flex-row-reverse mr-[12rem]'>
-                        <Link href={{ pathname: "./newEntry", query: { diary: selectedDiary, date: selectedDate?.toString() } }}>
-                            <span className='flex justify-center mt-5'>
-                                <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
-                                    {
-                                        dayjs().isSame(selectedDate, 'day') ?
-                                            "Create New Entry" :
-                                            "View Entry"
-                                    }
-                                </button>
-                            </span>
-                        </Link>
-                    </div> */}
                 </Container>
         </ThemeProvider>
     )
